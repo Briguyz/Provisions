@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 
+import 'package:provisions/home.dart';
+import 'package:provisions/maps.dart';
+import 'package:provisions/events.dart';
+
+
 void main() {
   runApp(const MyApp());
 }
@@ -7,7 +12,7 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -15,74 +20,70 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: MyColors.provisionGreen,
       ),
-      home: const MyHomePage(title: 'Provisions'),
+      home: const MainPage(title: 'Provisions'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+
+class MainPage extends StatefulWidget {
+  const MainPage({super.key, required this.title});
 
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
+  State<MainPage> createState() => MainPageState();
+} //MyHomePage
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
 
-  void _incrementCounter() {
+class MainPageState extends State<MainPage> {
+
+  // _tappedIndex is an integer that changes according to bottomNavigationBar icon that is clicked.
+  // pages[] is used in conjunction with _tappedIndex to navigate through the application's routes in the body.
+  int _tappedIndex = 0;
+  final pages = [
+    HomePage(),
+    MapsPage(),
+    EventsPage(),
+  ];
+
+  void _onItemSelected (int index) {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      _tappedIndex = index;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+
+      body: pages[_tappedIndex],
+
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.map_outlined),
+            label: 'Maps',
+          ),
+          BottomNavigationBarItem(
+           icon: Icon(Icons.event_note_rounded),
+           label: 'Events',
+          )
+        ],
+        currentIndex: _tappedIndex,
+        selectedItemColor: MyColors.provisionGreen,
+        onTap: _onItemSelected,
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
+
 class MyColors{
-  static const MaterialColor provisionGreen = const MaterialColor(
+  static const MaterialColor provisionGreen = MaterialColor(
     0xFF3DE172,
     <int, Color>{
       50: Color(0xFF3DE172),
