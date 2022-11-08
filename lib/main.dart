@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provisions/favorites.dart';
 
 import 'package:provisions/home.dart';
 import 'package:provisions/maps.dart';
@@ -45,6 +46,7 @@ class MainPageState extends State<MainPage> {
     HomePage(),
     MapsPage(),
     EventsPage(),
+    FavoritesPage(),
   ];
 
   void _onItemSelected (int index) {
@@ -72,9 +74,18 @@ class MainPageState extends State<MainPage> {
           BottomNavigationBarItem(
            icon: Icon(Icons.event_note_rounded),
            label: 'Events',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.star_purple500_rounded),
+            label: 'Favorites',
+
           )
+
         ],
         currentIndex: _tappedIndex,
+        unselectedItemColor: Colors.grey,
+        unselectedIconTheme: IconThemeData(color: Colors.grey),
+        //unselectedLabelStyle: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
         selectedItemColor: MyColors.provisionGreen,
         onTap: _onItemSelected,
       ),
