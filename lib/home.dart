@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provisions/main.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -13,7 +14,10 @@ class HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('Provisions'),
+        title: const Text('Provisions',
+        style: TextStyle(color: Colors.white),
+        ),
+
       ),
       body: Center(
         child: Padding(
