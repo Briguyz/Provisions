@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provisions/home.dart';
-import 'package:provisions/maps.dart';
-import 'package:provisions/events.dart';
-import 'package:provisions/favorites.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

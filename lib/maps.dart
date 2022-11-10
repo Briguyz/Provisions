@@ -1,14 +1,22 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:provisions/main.dart';
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
+
 import 'package:geocoder/geocoder.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:google_api_headers/google_api_headers.dart';
+//import 'package:location/location.dart';
+
+// --no-sound-null-safety  <-- arg for .dart file launch configurations
 
 const kGoogleApiKey = "AIzaSyB60rEfnkN6QZNkD5GOUuTcLV4w-Qa5ZPM";
 GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
+
 
 
 class MapsPage extends StatefulWidget {
@@ -19,7 +27,33 @@ class MapsPage extends StatefulWidget {
 } //MyHomePage
 
 class MapsPageState extends State<MapsPage> {
-  late GoogleMapController mapController;
+
+  late GoogleMapController mapController; // _controllerGoogleMap
+
+  //------//
+  Completer<GoogleMapController> _controllerGoogleMap = Completer();
+  GlobalKey<ScaffoldState> scaffoldKey= new GlobalKey<ScaffoldState>();
+
+  late Position currentPosition;
+  var geolocator = Geolocator();
+
+
+  void locatePosition() async {
+
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    currentPosition = position;
+
+    LatLng latLatPosition = LatLng(position.latitude, position.longitude);
+
+    CameraPosition cameraPosition = new CameraPosition(target: latLatPosition, zoom: 14);
+    mapController.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+  }
+
+
+
+  //------//
+
+
 
   final LatLng _center = const LatLng(46.8188, -92.0843);
 
@@ -28,7 +62,7 @@ class MapsPageState extends State<MapsPage> {
   late String address;
 
 
-  void _onMapCreated(GoogleMapController controller) {
+  Future<void> _onMapCreated(GoogleMapController controller) async {
     mapController = controller;
 
     Marker marker = const Marker(
@@ -93,11 +127,6 @@ class MapsPageState extends State<MapsPage> {
                                 icon: Icon(Icons.search),
                                 iconSize: 30.0)),
                         maxLines: 1,
-                        onTap:
-                            () async {
-                          //Prediction p = await PlacesAutocomplete.show(context: context, apiKey: kGoogleApiKey);
-                          //displayPrediction(p);
-                        },
                       ),
                     ),
                   ),
@@ -110,6 +139,7 @@ class MapsPageState extends State<MapsPage> {
             children: <Widget>[
               GoogleMap(
                 onMapCreated: _onMapCreated,
+
                 initialCameraPosition: CameraPosition(
                   target: _center,
                   zoom: 11.0,
@@ -120,16 +150,7 @@ class MapsPageState extends State<MapsPage> {
           )
       ),
     );
-  }
+  } //build
 }// Widget
 
-  Future<void> displayPrediction(Prediction p) async {
-    PlacesDetailsResponse detail = await _places.getDetailsByPlaceId(p.placeId!);
 
-    var placeID = p.placeId;
-    double? lat = detail.result.geometry?.location.lat;
-    double? lng = detail.result.geometry?.location.lng;
-    var address = await Geocoder.local.findAddressesFromQuery(p.description);
-    print(lat);
-    print(lng);
-} // MapsPageState
