@@ -4,6 +4,17 @@ import 'package:provisions/favorites.dart';
 import 'package:provisions/home.dart';
 import 'package:provisions/maps.dart';
 import 'package:provisions/events.dart';
+import 'login.dart';
+//import 'package:firebase_core/firebase_core.dart';
+
+/* ONCE FIREBASE CONNECTION WORKS
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp();
+
+  runApp(const MyApp());
+}*/
 
 
 void main() {
@@ -21,7 +32,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: MyColors.provisionGreen,
       ),
-      home: const MainPage(title: 'Provisions'),
+      home: LoginPage(),
+      //home: const MainPage(title: 'Provisions'),
     );
   }
 }
@@ -110,5 +122,4 @@ class MyColors{
     },
   );
 }
-
 
