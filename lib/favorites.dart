@@ -13,6 +13,7 @@ class FavoritesPageState extends State<FavoritesPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Favorites'),
+        automaticallyImplyLeading: false,
       ),
     );
   }

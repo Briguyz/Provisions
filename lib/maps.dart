@@ -65,6 +65,7 @@ class MapsPageState extends State<MapsPage> {
             child: AppBar(
               centerTitle: true,
               title: const Text('Provisions'),
+              automaticallyImplyLeading: false,
               backgroundColor: MyColors.provisionGreen,
               flexibleSpace: Stack(
                 children: <Widget>[
