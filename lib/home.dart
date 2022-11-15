@@ -18,6 +18,7 @@ class HomePageState extends State<HomePage> {
       appBar: AppBar(
         centerTitle: true,
         title: const Text('Provisions'),
+        automaticallyImplyLeading: false,
       ),
       body: Center(
         child: Padding(

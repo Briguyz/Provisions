@@ -13,6 +13,7 @@ class MapsPageState extends State<MapsPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Maps'),
+        automaticallyImplyLeading: false,
       ),
     );
   }

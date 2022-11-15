@@ -13,6 +13,7 @@ class EventsPageState extends State<EventsPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Events'),
+        automaticallyImplyLeading: false,
       ),
     );
   }
