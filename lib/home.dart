@@ -13,7 +13,7 @@ class HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('Provisions'),
+        title: const Text('Provisions', style: TextStyle(color: Colors.white),),
       ),
       body: Center(
         child: Padding(

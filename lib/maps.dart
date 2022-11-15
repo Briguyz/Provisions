@@ -1,21 +1,16 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provisions/main.dart';
-
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
-
-import 'package:geocoder/geocoder.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_webservice/places.dart';
-import 'package:google_api_headers/google_api_headers.dart';
-//import 'package:location/location.dart';
 
 // --no-sound-null-safety  <-- arg for .dart file launch configurations
 
 const kGoogleApiKey = "AIzaSyB60rEfnkN6QZNkD5GOUuTcLV4w-Qa5ZPM";
-GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
+
 
 
 
@@ -24,74 +19,42 @@ class MapsPage extends StatefulWidget {
 
   @override
   State<MapsPage> createState() => MapsPageState();
+
 } //MyHomePage
 
 class MapsPageState extends State<MapsPage> {
 
-  late GoogleMapController mapController; // _controllerGoogleMap
-
-  //------//
-  Completer<GoogleMapController> _controllerGoogleMap = Completer();
-  GlobalKey<ScaffoldState> scaffoldKey= new GlobalKey<ScaffoldState>();
-
-  late Position currentPosition;
-  var geolocator = Geolocator();
-
 
   void locatePosition() async {
 
-    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-    currentPosition = position;
+    Location location = new Location();
 
-    LatLng latLatPosition = LatLng(position.latitude, position.longitude);
+    bool _serviceEnabled;
+    PermissionStatus _permissionGranted;
+    LocationData _locationData;
 
-    CameraPosition cameraPosition = new CameraPosition(target: latLatPosition, zoom: 14);
-    mapController.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        return;
+      }
+    }
+
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
+
+    _locationData = await location.getLocation();
   }
-
-
-
-  //------//
-
 
 
   final LatLng _center = const LatLng(46.8188, -92.0843);
 
-  Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
-
-  late String address;
-
-
-  Future<void> _onMapCreated(GoogleMapController controller) async {
-    mapController = controller;
-
-    Marker marker = const Marker(
-      markerId: MarkerId('Tavern'),
-      position: LatLng(46.81814567357251, -92.07721304313327),
-      infoWindow: InfoWindow(title: 'Tavern', snippet: 'Expensive burgers'),
-    );
-
-    Marker marker2 = const Marker(
-      markerId: MarkerId('PhoHolic'),
-      position: LatLng(46.80075523103305, -92.12578304633212),
-      infoWindow: InfoWindow(title: 'PhoHolic', snippet: 'Great asian food'),
-    );
-
-    Marker marker3 = const Marker(
-      markerId: MarkerId('Buffalo Wild Wings'),
-      position: LatLng(46.80622977107151, -92.15531751565206),
-      infoWindow: InfoWindow(
-          title: 'Buffalo Wild Wings', snippet: 'I like the tap water'),
-    );
-
-    setState(() {
-      // adding a new marker to map
-      markers[const MarkerId('Tavern')] = marker;
-      markers[const MarkerId('PhoHolic')] = marker2;
-      markers[const MarkerId('Buffalo Wild Wings')] = marker3;
-    }); //setState
-
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -138,19 +101,26 @@ class MapsPageState extends State<MapsPage> {
           body: Stack(
             children: <Widget>[
               GoogleMap(
-                onMapCreated: _onMapCreated,
-
+                padding: EdgeInsets.only(top: 400.0),
+                mapType: MapType.normal,
+                myLocationEnabled: true,
+                myLocationButtonEnabled: true,
+                zoomGesturesEnabled: true,
+                zoomControlsEnabled: true,
                 initialCameraPosition: CameraPosition(
                   target: _center,
-                  zoom: 11.0,
+                  zoom: 5.0,
                 ),
-                markers: markers.values.toSet(),
+                onMapCreated: (GoogleMapController controller) {
+                  locatePosition();
+                  },
               ),
             ],
-          )
+          ),
       ),
     );
   } //build
+
 }// Widget
 
 
