@@ -2,10 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:location/location.dart';
+//import 'package:permission/permission.dart';
+import 'package:provider/provider.dart';
+import 'package:provisions/blocs/application_bloc.dart';
 import 'package:provisions/main.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:location/location.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
+
 
 // --no-sound-null-safety  <-- arg for .dart file launch configurations
 
@@ -24,33 +28,32 @@ class MapsPage extends StatefulWidget {
 
 class MapsPageState extends State<MapsPage> {
 
+   void locatePosition() async {
+     Location location = new Location();
 
-  void locatePosition() async {
+     bool _serviceEnabled;
+     PermissionStatus _permissionGranted;
+     LocationData _locationData;
 
-    Location location = new Location();
+     _serviceEnabled = await location.serviceEnabled();
+     if (!_serviceEnabled) {
+       _serviceEnabled = await location.requestService();
+       if (!_serviceEnabled) {
+         return;
+       }
+     }
 
-    bool _serviceEnabled;
-    PermissionStatus _permissionGranted;
-    LocationData _locationData;
+     _permissionGranted = await location.hasPermission();
+     if (_permissionGranted == PermissionStatus.denied) {
+       _permissionGranted = await location.requestPermission();
+       if (_permissionGranted != PermissionStatus.granted) {
+         return;
+       }
+     }
 
-    _serviceEnabled = await location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await location.requestService();
-      if (!_serviceEnabled) {
-        return;
-      }
-    }
+      _locationData = await location.getLocation();
+   }
 
-    _permissionGranted = await location.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await location.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted) {
-        return;
-      }
-    }
-
-    _locationData = await location.getLocation();
-  }
 
 
   final LatLng _center = const LatLng(46.8188, -92.0843);
@@ -58,7 +61,13 @@ class MapsPageState extends State<MapsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    // final applicationBloc = Provider.of<ApplicationBloc>(context);
+    // return (applicationBloc.currentLocation == null)
+    //     ? Center(
+    //   child: CircularProgressIndicator(),
+    // )
+    //     :
+   return MaterialApp(
       home: Scaffold(
           appBar: PreferredSize(
             preferredSize: const Size.fromHeight(120.0),
@@ -80,7 +89,8 @@ class MapsPageState extends State<MapsPage> {
                           borderRadius: BorderRadius.circular(10.0),
                           color: Colors.white
                       ),
-                      child: TextFormField(
+                      child:
+                      TextFormField(
                         decoration: const InputDecoration(
                             hintText: 'Enter Address',
                             border: InputBorder.none,
@@ -113,7 +123,7 @@ class MapsPageState extends State<MapsPage> {
                   zoom: 5.0,
                 ),
                 onMapCreated: (GoogleMapController controller) {
-                  locatePosition();
+                    locatePosition();
                   },
               ),
             ],

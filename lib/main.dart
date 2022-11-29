@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:provisions/blocs/application_bloc.dart';
 import 'package:provisions/favorites.dart';
 
 import 'package:provisions/home.dart';
@@ -27,13 +29,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Provisions',
-      theme: ThemeData(
-        primarySwatch: MyColors.provisionGreen,
-      ),
-      home: LoginPage(),
-      //home: const MainPage(title: 'Provisions'),
+    return ChangeNotifierProvider(
+        create: (context)  => ApplicationBloc(),
+      child: MaterialApp(
+        title: 'Provisions',
+        theme: ThemeData(
+          primarySwatch: MyColors.provisionGreen,
+        ),
+        home: LoginPage(),
+        //home: const MainPage(title: 'Provisions'),
+      )
     );
   }
 }
