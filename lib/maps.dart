@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,6 +10,9 @@ import 'package:provisions/blocs/application_bloc.dart';
 import 'package:provisions/main.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
+import 'package:provisions/models/place.dart';
+import 'package:provisions/services/places_service.dart';
+
 
 
 // --no-sound-null-safety  <-- arg for .dart file launch configurations
@@ -27,6 +31,30 @@ class MapsPage extends StatefulWidget {
 } //MyHomePage
 
 class MapsPageState extends State<MapsPage> {
+
+  Completer<GoogleMapController> _mapController = Completer();
+  late StreamSubscription locationSubscription;
+
+
+  @override
+  void initState() {
+    final applicationBloc = Provider.of<ApplicationBloc>(context, listen: false);
+
+    locationSubscription = applicationBloc.selectedLocation.stream.listen((place) {
+      if (place != null){
+        _goToPlace(place);
+      }
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose(){
+    final applicationBloc = Provider.of<ApplicationBloc>(context, listen: false);
+    applicationBloc.dispose();
+    locationSubscription.cancel();
+    super.dispose();
+  }
 
    void locatePosition() async {
      Location location = new Location();
@@ -61,13 +89,10 @@ class MapsPageState extends State<MapsPage> {
 
   @override
   Widget build(BuildContext context) {
-    // final applicationBloc = Provider.of<ApplicationBloc>(context);
-    // return (applicationBloc.currentLocation == null)
-    //     ? Center(
-    //   child: CircularProgressIndicator(),
-    // )
-    //     :
-   return MaterialApp(
+
+    PlacesService placesService = PlacesService();
+    final applicationBloc = Provider.of<ApplicationBloc>(context);
+      return MaterialApp(
       home: Scaffold(
           appBar: PreferredSize(
             preferredSize: const Size.fromHeight(120.0),
@@ -90,7 +115,7 @@ class MapsPageState extends State<MapsPage> {
                           color: Colors.white
                       ),
                       child:
-                      TextFormField(
+                      TextField(
                         decoration: const InputDecoration(
                             hintText: 'Enter Address',
                             border: InputBorder.none,
@@ -101,6 +126,7 @@ class MapsPageState extends State<MapsPage> {
                                 icon: Icon(Icons.search),
                                 iconSize: 30.0)),
                         maxLines: 1,
+                        onChanged: (value) => applicationBloc.searchPlaces(value),
                       ),
                     ),
                   ),
@@ -109,12 +135,13 @@ class MapsPageState extends State<MapsPage> {
             ),
           ),
 
-          body: Stack(
+          body:
+          Stack(
             children: <Widget>[
               GoogleMap(
-                padding: EdgeInsets.only(top: 400.0),
+                padding: const EdgeInsets.only(top: 400.0),
                 mapType: MapType.normal,
-                myLocationEnabled: true,
+                myLocationEnabled: true, // need to hard code this if want to appear after initial viewing
                 myLocationButtonEnabled: true,
                 zoomGesturesEnabled: true,
                 zoomControlsEnabled: true,
@@ -123,15 +150,55 @@ class MapsPageState extends State<MapsPage> {
                   zoom: 5.0,
                 ),
                 onMapCreated: (GoogleMapController controller) {
-                    locatePosition();
-                  },
+                  _mapController.complete(controller);
+                  //locatePosition();
+                },
+      ),
+              if (applicationBloc.searchResults.isNotEmpty)
+                Container(
+                  height: 300.0,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(.6),
+                    backgroundBlendMode: BlendMode.darken,
+                  ),
+                ),
+              Container(
+                height: 300.0,
+                child:
+                  ListView.builder(
+                    itemCount: applicationBloc.searchResults.length,
+                    itemBuilder: (context, index){
+                      return ListTile(
+                          title:
+                            Text(
+                              applicationBloc.searchResults[index].description,
+                              style: const TextStyle(color: Colors.white)
+                            ),
+                        onTap: () {
+                          applicationBloc.setSelectedLocation(
+                            applicationBloc.searchResults[index].placeId
+                          );
+                        },
+                      );
+                    },
+                  ),
               ),
             ],
           ),
       ),
     );
   } //build
-
+  Future<void> _goToPlace(Place place) async {
+    final GoogleMapController controller = await _mapController.future;
+    controller.animateCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(
+            target: LatLng(place.geometry.location.lat, place.geometry.location.lng), zoom: 14
+        )
+      )
+    );
+  }
 }// Widget
 
 
