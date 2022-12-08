@@ -198,11 +198,6 @@ class MapsPageState extends State<MapsPage> {
                       child: FloatingActionButton(
                         onPressed: () => { applicationBloc.togglePlaceType('food banks', true) },
                         backgroundColor: Colors.white,
-                        // label:
-                        // const Text(
-                        //   'Find nearby Food Banks!',
-                        //   style: TextStyle(color: Colors.black),
-                        // ),
                         child:
                         const Icon(
                           Icons.food_bank_outlined,
