@@ -24,4 +24,17 @@ class PlacesService {
     return Place.fromJson(jsonResult);
   }
 
+  Future<List<Place>> getPlaces(double lat, double lng, String placeType) async {
+    var url =
+      Uri.parse('https://maps.googleapis.com/maps/api/place/textsearch/json?query=$placeType&location=$lat, $lng&rankby=distance&key=AIzaSyB60rEfnkN6QZNkD5GOUuTcLV4w-Qa5ZPM');
+    http.Response response = await http.get(url);
+    var json = convert.jsonDecode(response.body);
+    var jsonResults = json['results'] as List;
+    return jsonResults.map((place) => Place.fromJson(place)).toList();
+  }
+
 }
+
+//AIzaSyB60rEfnkN6QZNkD5GOUuTcLV4w-Qa5ZPM
+
+//https://maps.googleapis.com/maps/api/place/textsearch/json?query=food banks&location=46.8188,-92.0843&key=AIzaSyB60rEfnkN6QZNkD5GOUuTcLV4w-Qa5ZPM

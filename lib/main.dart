@@ -126,5 +126,21 @@ class MyColors{
       900: Color(0xFF3DE172),
     },
   );
+
+  static const MaterialColor provisionKhaki = MaterialColor(
+    0xFFFFF7B4,
+    <int, Color>{
+      50: Color(0xFFFFF7B4),
+      100: Color(0xFFFFF7B4),
+      200: Color(0xFFFFF7B4),
+      300: Color(0xFFFFF7B4),
+      400: Color(0xFFFFF7B4),
+      500: Color(0xFFFFF7B4),
+      600: Color(0xFFFFF7B4),
+      700: Color(0xFFFFF7B4),
+      800: Color(0xFFFFF7B4),
+      900: Color(0xFFFFF7B4),
+    },
+  );
 }
 
