@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:provisions/blocs/application_bloc.dart';
 import 'package:provisions/favorites.dart';
 
 import 'package:provisions/home.dart';
@@ -27,13 +29,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Provisions',
-      theme: ThemeData(
-        primarySwatch: MyColors.provisionGreen,
-      ),
-      home: LoginPage(),
-      //home: const MainPage(title: 'Provisions'),
+    return ChangeNotifierProvider(
+        create: (context)  => ApplicationBloc(),
+      child: MaterialApp(
+        title: 'Provisions',
+        theme: ThemeData(
+          primarySwatch: MyColors.provisionGreen,
+        ),
+        home: LoginPage(),
+        //home: const MainPage(title: 'Provisions'),
+      )
     );
   }
 }
@@ -119,6 +124,22 @@ class MyColors{
       700: Color(0xFF3DE172),
       800: Color(0xFF3DE172),
       900: Color(0xFF3DE172),
+    },
+  );
+
+  static const MaterialColor provisionKhaki = MaterialColor(
+    0xFFFFF7B4,
+    <int, Color>{
+      50: Color(0xFFFFF7B4),
+      100: Color(0xFFFFF7B4),
+      200: Color(0xFFFFF7B4),
+      300: Color(0xFFFFF7B4),
+      400: Color(0xFFFFF7B4),
+      500: Color(0xFFFFF7B4),
+      600: Color(0xFFFFF7B4),
+      700: Color(0xFFFFF7B4),
+      800: Color(0xFFFFF7B4),
+      900: Color(0xFFFFF7B4),
     },
   );
 }
