@@ -18,78 +18,63 @@ class ProfilePage extends StatefulWidget{
 
 class ProfilePageState extends State<ProfilePage> {
   //final databaseReference = FirebaseFirestore.instance.collection('Users');
-  final user = FirebaseAuth.instance.currentUser;
+  final user = FirebaseAuth.instance.currentUser!;
   final databaseReference = FirebaseFirestore.instance.collection('Users');
 
 
-  Future<void> getUser() async {
-    DocumentSnapshot data = await retrieveData();
-    print(data.data().toString());
-  }
+  // Future<void> getUser() async {
+  //   DocumentSnapshot data = await retrieveData();
+  //   print(data.data().toString());
+  // }
+  //
+  // Future<DocumentSnapshot> retrieveData() async{
+  //   return databaseReference.doc(user?.uid).get();
+  // }
 
-  Future<DocumentSnapshot> retrieveData() async{
-    return databaseReference.doc(user?.uid).get();
-  }
+//   @override
+//   Widget build(BuildContext context){
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Row(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: [
+//             Image.asset(
+//               'assets/images/a-logo.png',
+//               //color: Colors.white,
+//               fit: BoxFit.contain,
+//               height: 32,
+//             ),
+//           ],
+//         ),
+//       ),
+//       body: SingleChildScrollView(
+//
+//         child: Container(
+//
+//           //Check padding
+//           padding: const EdgeInsets.all(20),
+//           child: Column(
+//             children: [
+//               SizedBox(
+//                 width: 120, height: 120,
+//                 child: ClipRRect(
+//                   borderRadius: BorderRadius.circular(100),
+//                   child: Image(image: AssetImage('a-logo.png'))
+//                 ),
+//               ),
+//
+//               const SizedBox(height: 10),
+//
+//               //Text()
+//             ],
+//           ),
+//         ),
+//       )
+//     );
+//   }
+//
+// }
 
-  Future<void> readData(){
-    databaseReference.once().then((DataSnapshot snapshot) {
-      print('Data : ${snapshot.value}');
-    });
-  }
-
-  @override
-  Widget build(BuildContext context){
-    return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              'assets/images/a-logo.png',
-              //color: Colors.white,
-              fit: BoxFit.contain,
-              height: 32,
-            ),
-          ],
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Container(
-          //Check padding
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              SizedBox(
-                width: 120, height: 120,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(100),
-                  child: Image(image: AssetImage('a-logo.png'))
-                ),
-              ),
-
-              const SizedBox(height: 10),
-
-              Text()
-            ],
-          ),
-        ),
-      )
-    );
-  }
-
-}
-
-
-/*
-class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
-
-  @override
-  State<ProfilePage> createState() => ProfilePageState();
-} //MyProfilePage
-
-class ProfilePageState extends State<ProfilePage> {
-  final user = FirebaseAuth.instance.currentUser!;
 
   @override
   Widget build(BuildContext context) {
@@ -131,5 +116,3 @@ class ProfilePageState extends State<ProfilePage> {
     );
   }
 }
-
- */
