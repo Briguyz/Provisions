@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provisions/main.dart';
+import 'package:provisions/MainPage.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
@@ -121,7 +121,24 @@ class MapsPageState extends State<MapsPage> {
       ),
     );
   } //build
-
 }// Widget
+
+class MyColors {
+  static const MaterialColor provisionGreen = MaterialColor(
+    0xFF3DE172,
+    <int, Color>{
+      50: Color(0xFF3DE172),
+      100: Color(0xFF3DE172),
+      200: Color(0xFF3DE172),
+      300: Color(0xFF3DE172),
+      400: Color(0xFF3DE172),
+      500: Color(0xFF3DE172),
+      600: Color(0xFF3DE172),
+      700: Color(0xFF3DE172),
+      800: Color(0xFF3DE172),
+      900: Color(0xFF3DE172),
+    },
+  );
+}
 
 

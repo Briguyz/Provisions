@@ -45,6 +45,12 @@ dependencies:
   location: ^4.4.0
   permission: ^0.1.7
   flutter_google_places_hoc081098: ^1.0.0-nullsafety.1
+  firebase_core: ^2.2.0
+  cloud_firestore: ^4.0.5
+  firebase_auth:
+  email_validator: ^2.1.16
+  string_extensions: ^0.6.5
+  material_color_gen: ^2.0.0
 
 dev_dependencies:
   flutter_test:
@@ -67,6 +73,9 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
+  assets:
+    - assets/images/a-logo.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

@@ -1,27 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provisions/main.dart';
-import 'package:provisions/home.dart';
-import 'package:provisions/profilesetup.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:provisions/MainPage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provisions/Login/SignUp.dart';
+
+import 'dart:io';
+
+import 'package:flutter/material.dart';
+
+class Login extends StatefulWidget {
+  final VoidCallback showSignUp;
+  const Login({Key? key, required this.showSignUp}) : super(key: key);
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<Login> createState() => _LoginState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginState extends State<Login> {
+  final databaseReference = FirebaseFirestore.instance.collection('Users');
+
+  FirebaseAuth auth = FirebaseAuth.instance;
+
+
   //Text controllers
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
-
-  /* WHEN FIREBASE CONNECTION WORKS
-  Future signIn() async {
+  Future signIn() async{
     await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
+      email: _emailController.text.trim(),
+      password: _passwordController.text.trim()
     );
   }
 
@@ -31,8 +42,25 @@ class _LoginPageState extends State<LoginPage> {
     _passwordController.dispose();
     super.dispose();
   }
-   */
+  /*
+  //Future<bool> getUser() async{
+  bool getUser() {
+    /*DocumentSnapshot data = await retrieveData();
+    print(data.data().toString());
+    return false;*/
 
+
+      databaseReference.doc(_emailController.text.toString())
+          .get()
+          .then((DocumentSnapshot documentSnapshot) {
+        if (documentSnapshot.exists) {
+          print('Document exists on the database');
+          return true;
+        }
+      });
+      return false;
+  }
+   */
 
   @override
   Widget build(BuildContext context) {
@@ -46,38 +74,10 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
 
                     //Icon or Picture
-                    Icon(Icons.android,
-                      size: 100,
-                    ),
-                    Text(
-                      'Provisions',
-                      style: GoogleFonts.abel(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                      )
-                    ),
-                    SizedBox(height: 25),
-/*
-                    //Sign in Message
-                    Text(
-                      'Hello Again',
-                      style: GoogleFonts.aBeeZee(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 36,
-                      ),
-                    ), */
-                    SizedBox(height: 10),
-                    Center(
-                      child: Text(
-                          'Welcome Back!',
-                          style: GoogleFonts.aBeeZee(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 36,
-                          ),
-                      ),
-                    ),
-                    SizedBox(height: 40),
+                  Image.asset('assets/images/a-logo.png',
+                  ),
 
+                    SizedBox(height: 40),
 
                     //Email textfield
                     Padding(
@@ -93,6 +93,10 @@ class _LoginPageState extends State<LoginPage> {
                           child: TextField(
                             controller: _emailController,
                             decoration: InputDecoration(
+                              icon: Icon(
+                                Icons.email_outlined,
+                                color: Color(0xFF388E3C)
+                              ),
                               border: InputBorder.none,
                               hintText: 'Email',
                             ),
@@ -117,6 +121,10 @@ class _LoginPageState extends State<LoginPage> {
                             controller: _passwordController,
                             obscureText: true,
                             decoration: InputDecoration(
+                              icon: Icon(
+                                Icons.vpn_key,
+                                color: Color(0xFF388E3C),
+                              ),
                               border: InputBorder.none,
                               hintText: 'Password',
                             ),
@@ -130,10 +138,7 @@ class _LoginPageState extends State<LoginPage> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 25.0),
                       child: GestureDetector(
-                        onTap: (){
-                          Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => MainPage(title: 'Provisions')));
-                          //pushReplacement(MaterialPageRoute(builder: (BuildContext) => Provisions()));
-                        },
+                        onTap: signIn,
                         child: Container(
                           padding: EdgeInsets.all(20),
                           decoration: BoxDecoration(
@@ -165,9 +170,7 @@ class _LoginPageState extends State<LoginPage> {
                             )
                         ),
                         GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => ProfileSetup()));
-                          },
+                          onTap: widget.showSignUp,
                           child: Text(
                               ' Register now',
                               style: TextStyle(
