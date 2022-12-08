@@ -26,11 +26,10 @@ class MarkerService {
     return Marker(
       markerId: MarkerId(markerId),
       draggable: false,
-      onTap: () {}
-/*      infoWindow: InfoWindow(
+      infoWindow: InfoWindow(
         title:
           place.name, snippet: place.vicinity, ),
-        position: LatLng(place.geometry.location.lat, place.geometry.location.lng)*/
+        position: LatLng(place.geometry.location.lat, place.geometry.location.lng)
       );
   }
 
