@@ -115,14 +115,27 @@ class MapsPageState extends State<MapsPage> {
           appBar: PreferredSize(
             preferredSize: const Size.fromHeight(120.0),
             child: AppBar(
-              centerTitle: true,
-              title: const Text('Provisions'),
+              //centerTitle: true,
+              backgroundColor: Colors.green,
               automaticallyImplyLeading: false,
-              backgroundColor: MyColors.provisionGreen,
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                Image.asset(
+                'assets/images/a-logo.png',
+                //color: Colors.white,
+                fit: BoxFit.contain,
+                height: 32,
+                ),
+                ]
+            ),
+              //const Text('Provisions'),
+              //backgroundColor: MyColors.provisionGreen,
+
               flexibleSpace: Stack(
                 children: [
                   Positioned(
-                    top: 80.0,
+                    top: 105.0,//80.0,
                     right: 15.0,
                     left: 15.0,
                     child: Container(

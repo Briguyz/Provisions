@@ -42,25 +42,6 @@ class _LoginState extends State<Login> {
     _passwordController.dispose();
     super.dispose();
   }
-  /*
-  //Future<bool> getUser() async{
-  bool getUser() {
-    /*DocumentSnapshot data = await retrieveData();
-    print(data.data().toString());
-    return false;*/
-
-
-      databaseReference.doc(_emailController.text.toString())
-          .get()
-          .then((DocumentSnapshot documentSnapshot) {
-        if (documentSnapshot.exists) {
-          print('Document exists on the database');
-          return true;
-        }
-      });
-      return false;
-  }
-   */
 
   @override
   Widget build(BuildContext context) {

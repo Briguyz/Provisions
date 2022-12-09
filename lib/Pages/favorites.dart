@@ -29,6 +29,33 @@ class FavoritesPageState extends State<FavoritesPage> {
         ),
         automaticallyImplyLeading: false,
       ),
+      backgroundColor: Color(0xFFf4f4f0),
+      body: ListView(
+        padding: const EdgeInsets.all(8),
+        children: [
+          Card(
+            child: ListTile(
+              title: Text("Favorited Location 1"),
+              subtitle: Text("Location Details"),
+              trailing: Icon(Icons.star),
+            ),
+          ),
+          Card(
+            child: ListTile(
+              title: Text("Favorited Location 2"),
+              subtitle: Text("Location Details"),
+              trailing: Icon(Icons.star),
+            ),
+          ),
+          Card(
+            child: ListTile(
+              title: Text("Favorited Location 3"),
+              subtitle: Text("Location Details"),
+              trailing: Icon(Icons.star),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

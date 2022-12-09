@@ -9,6 +9,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:provisions/string_extension.dart';
+import 'package:flutter/services.dart';
+
 
 
 import '../input_theme.dart';
@@ -27,6 +29,9 @@ class SignUp extends StatefulWidget {
 class _SignUpState extends State<SignUp> {
 
   var _formKey = GlobalKey<FormState>();
+  // final createUser = FirebaseFirestore.instance.collection('Users');
+  // final createAuth = FirebaseAuth.instance;
+
   bool obscurePassword = true;
   bool obscureConfirmPassword = true;
 
@@ -45,30 +50,117 @@ class _SignUpState extends State<SignUp> {
     super.dispose();
   }
 
-    Future<void> signUp() async {
-      //Creates User with Email and Password
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: _emailController.text.trim(),
-          password: _passwordController.text.trim());
-
-      //Adds User information into database collection('User')
-      addUserDetails(
-          _fullnameController.text.trim(),
-          _emailController.text.trim()
-      );
-    }
-
-    Future<void> addUserDetails(String full_name, String email) async {
+  Future<void> signUp() async {
+  //signUp(){
+    //Creates User with Email and Password
     var Favorites = <String>[];
     var Events = <String>[];
 
-    await FirebaseFirestore.instance.collection('Users').add({
-      'Name': full_name,
-      'Email': email,
-      'Events': Events,
-      'Favorites': Favorites,
+    await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim()
+    );
+
+    await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .set({
+        'Name': _fullnameController.text.trim(),
+        'Email': _emailController.text.trim(),
+        'Events': Events,
+        'Favorites': Favorites,
     });
+
+    //   await FirebaseFirestore.instance
+  //       .collection('Users')
+  //       .doc(FirebaseAuth.instance.currentUser!.uid).set({
+  //     firstName: firstName,
+  //     lastName: lastName,
+  //     birthday: birthday,
+  //     email: email
+  //   })
+  // })
+    // FirebaseFirestore.instance.collection("Users").add({
+    //   'Name': _fullnameController.text.trim(),
+    //   'Email': _emailController.text.trim(),
+    //   'Events': Events,
+    //   'Favorites': Favorites,
+    // });
+  //   FirebaseAuth.instance.createUserWithEmailAndPassword(email, password)
+  //       .then(() => {
+  //   //Once the user creation has happened successfully, we can add the currentUser into firestore
+  //   //with the appropriate details.
+  //   firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid)
+  //       .set({
+  //   firstName: firstName,
+  //   lastName: lastName,
+  //   birthday: birthday,
+  //   email: email
+  //   })
+  //       //ensure we catch any errors at this stage to advise us if something does go wrong
+  //       .catch(error => {
+  //       console.log('Something went wrong with added user to firestore: ', error);
+  //       })
+  // })
+  //   //we need to catch the whole sign up process if it fails too.
+  //       .catch(error => {
+  //   console.log('Something went wrong with sign up: ', error);
+  //   }
   }
+    //   await createAuth.createUserWithEmailAndPassword(
+    //       email: _emailController.text.trim(),
+    //       password: _passwordController.text.trim(),
+    //
+    //   );
+    //
+    // await FirebaseFirestore.instance.collection("Users").add({
+    //   'Name': _fullnameController.text.trim(),
+    //   'Email': _emailController.text.trim(),
+    //   'Events': Events,
+    //   'Favorites': Favorites,
+    // });
+
+  //}
+
+    // Future<void> signUp() async {
+    //   //Creates User with Email and Password
+    //   var Favorites = <String>[];
+    //   var Events = <String>[];
+    //
+    //   await FirebaseFirestore.instance.collection("Users").add({
+    //       'Name': _fullnameController.text.trim(),
+    //       'Email': _emailController.text.trim(),
+    //       'Events': Events,
+    //       'Favorites': Favorites,
+    //   });
+    //
+    //   }
+
+
+      //   await createAuth.createUserWithEmailAndPassword(
+    //       email: _emailController.text.trim(),
+    //       password: _passwordController.text.trim());
+    //
+    //   //Adds User information into database collection('User')
+    //   addUserDetails(
+    //       _fullnameController.text.trim(),
+    //       _emailController.text.trim()
+    //   );
+    // }
+    //
+    // Future<void> addUserDetails(String full_name, String email) async {
+    // var Favorites = <String>[];
+    // var Events = <String>[];
+    //
+    // createAuth
+    //
+    // await createUser.add({
+    //   'Name': full_name,
+    //   'Email': email,
+    //   'Events': Events,
+    //   'Favorites': Favorites,
+    // });
+
 
   @override
   Widget build(BuildContext context) {
